@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Flight data
+flights.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables
+.env
