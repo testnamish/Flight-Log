@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Management System - Add Flight</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Flight Management System</h1>
+            <nav>
+                <a href="/" class="active">Add Flight</a>
+                <a href="/flights">View Flights</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <h2>Add New Flight</h2>
+                <form id="flightForm" action="/add-flight" method="POST">
+                    <div class="form-group">
+                        <label for="flightNumber">Flight Number *</label>
+                        <input 
+                            type="text" 
+                            id="flightNumber" 
+                            name="flightNumber" 
+                            placeholder="e.g., AI101" 
+                            required
+                            pattern="[A-Z0-9]+"
+                            title="Flight number should contain only uppercase letters and numbers"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aircraftType">Aircraft Type *</label>
+                        <select id="aircraftType" name="aircraftType" required>
+                            <option value="">Select Aircraft Type</option>
+                            <option value="Boeing 737">Boeing 737</option>
+                            <option value="Boeing 747">Boeing 747</option>
+                            <option value="Boeing 777">Boeing 777</option>
+                            <option value="Boeing 787">Boeing 787</option>
+                            <option value="Airbus A320">Airbus A320</option>
+                            <option value="Airbus A330">Airbus A330</option>
+                            <option value="Airbus A350">Airbus A350</option>
+                            <option value="Airbus A380">Airbus A380</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="origin">Origin *</label>
+                            <input 
+                                type="text" 
+                                id="origin" 
+                                name="origin" 
+                                placeholder="e.g., New Delhi" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="destination">Destination *</label>
+                            <input 
+                                type="text" 
+                                id="destination" 
+                                name="destination" 
+                                placeholder="e.g., Mumbai" 
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduledDeparture">Scheduled Departure *</label>
+                        <input 
+                            type="datetime-local" 
+                            id="scheduledDeparture" 
+                            name="scheduledDeparture" 
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn-submit">Add Flight</button>
+                </form>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Flight Management System</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
