@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Management System - View Flights</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Flight Management System</h1>
+            <nav>
+                <a href="/">Add Flight</a>
+                <a href="/flights" class="active">View Flights</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="flights-container">
+                <h2>All Flights</h2>
+                <div id="flightsTable">
+                    <p class="loading">Loading flights...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Flight Management System</p>
+        </footer>
+    </div>
+
+    <script>
+        // Fetch and display flights
+        async function loadFlights() {
+            try {
+                const response = await fetch('/api/flights');
+                const flights = await response.json();
+
+                const tableContainer = document.getElementById('flightsTable');
+
+                if (flights.length === 0) {
+                    tableContainer.innerHTML = '<p class="no-flights">No flights available. <a href="/">Add a flight</a></p>';
+                    return;
+                }
+
+                let tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Flight Number</th>
+                                <th>Aircraft</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Status</th>
+                                <th>Departure Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                flights.forEach(flight => {
+                    const departureDate = new Date(flight.scheduledDeparture);
+                    const formattedDate = departureDate.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    tableHTML += `
+                        <tr>
+                            <td><strong>${flight.flightNumber}</strong></td>
+                            <td>${flight.aircraftType}</td>
+                            <td>${flight.origin}</td>
+                            <td>${flight.destination}</td>
+                            <td><span class="status status-${flight.status.toLowerCase()}">${flight.status}</span></td>
+                            <td>${formattedDate}</td>
+                            <td>
+                                ${flight.status === 'SCHEDULED' 
+                                    ? `<button class="btn-depart" onclick="markAsDeparted('${flight.id}')">Mark as Departed</button>`
+                                    : '<span class="departed-text">Departed</span>'
+                                }
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                tableContainer.innerHTML = tableHTML;
+
+            } catch (error) {
+                console.error('Error loading flights:', error);
+                document.getElementById('flightsTable').innerHTML = '<p class="error">Error loading flights. Please try again.</p>';
+            }
+        }
+
+        // Mark flight as departed
+        async function markAsDeparted(flightId) {
+            try {
+                const response = await fetch(`/update-status/${flightId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Reload the page to show updated status
+                    window.location.reload();
+                } else {
+                    alert('Failed to update flight status');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Error updating flight status');
+            }
+        }
+
+        // Load flights when page loads
+        window.addEventListener('DOMContentLoaded', loadFlights);
+    </script>
+</body>
+</html>
